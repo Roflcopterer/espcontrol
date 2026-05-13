@@ -643,6 +643,8 @@ script:
     mode: single
     then:
       - lambda: 'id(is_clock_showing) = false;'
+      - lvgl.widget.hide: clock_screensaver_background
+      - lvgl.widget.hide: clock_screensaver_overlay
       - lvgl.widget.hide: clock_screensaver
       - if:
           condition:
