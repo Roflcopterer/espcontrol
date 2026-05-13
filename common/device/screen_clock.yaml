@@ -1,11 +1,6 @@
 # =============================================================================
 # CLOCK SCREENSAVER - Full-screen clock overlay for idle display
 # =============================================================================
-# Black overlay with a large thin-font time label. Hidden by default; shown
-# by backlight.yaml when the clock screensaver is enabled and the idle
-# timeout fires. The label is positioned absolutely so the interval can
-# drift it for burn-in prevention.
-# =============================================================================
 
 font:
   - file: "gfonts://Roboto@Bold"
@@ -17,20 +12,52 @@ font:
 lvgl:
   top_layer:
     widgets:
+
+      # ---------------------------------------------------------------------
+      # BACKGROUND IMAGE LAYER (OPTIONAL - SAFE LVGL RENDER ONLY)
+      # ---------------------------------------------------------------------
+      - image:
+          id: clock_screensaver_background
+          src: clock_bg_image
+          x: 0
+          y: 0
+          width: ${screen_width}
+          height: ${screen_height}
+          hidden: true
+
+      # ---------------------------------------------------------------------
+      # DARK OVERLAY (keeps clock readable)
+      # ---------------------------------------------------------------------
+      - obj:
+          id: clock_screensaver_overlay
+          x: 0
+          y: 0
+          width: ${screen_width}
+          height: ${screen_height}
+          bg_color: 0x000000
+          bg_opa: 50%
+          radius: 0
+          border_width: 0
+          pad_all: 0
+          scrollable: false
+          clickable: false
+          hidden: true
+
+      # ---------------------------------------------------------------------
+      # CLOCK TEXT
+      # ---------------------------------------------------------------------
       - obj:
           id: clock_screensaver
           x: 0
           y: 0
           width: ${screen_width}
           height: ${screen_height}
-          bg_color: 0x000000
-          bg_opa: 100%
+          bg_opa: 0%
           radius: 0
           border_width: 0
           pad_all: 0
           scrollable: false
-          scrollbar_mode: "off"
-          clickable: true
+          clickable: false
           hidden: true
           widgets:
             - label:
@@ -38,6 +65,11 @@ lvgl:
                 text_font: clock_screensaver_font
                 text_color: 0xFFFFFF
                 text: "00:00"
+                align: center
+
+      # ---------------------------------------------------------------------
+      # TOUCH GUARD (wake screen)
+      # ---------------------------------------------------------------------
       - obj:
           id: dim_screensaver_touch_guard
           x: 0
@@ -49,7 +81,6 @@ lvgl:
           border_width: 0
           pad_all: 0
           scrollable: false
-          scrollbar_mode: "off"
           clickable: true
           hidden: true
           on_press:
